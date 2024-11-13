@@ -1,0 +1,33 @@
+{
+  "name": "assessment-11-11-2024",
+  "version": "1.0.0",
+  "description": "Building Role-Based Access Control (RBAC) in Node.Js and Express.Js. Where admin can create read update delete product and manager can create read and update product and employee only create and read product",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon index.ts",
+    "start": "nodemon index.ts",
+    "build": "tsc"
+  },
+  "author": "Sayantan Singha",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.1",
+    "nodemailer": "^6.9.16"
+  }
+}
