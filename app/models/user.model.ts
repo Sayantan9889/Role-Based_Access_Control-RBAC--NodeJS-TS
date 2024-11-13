@@ -1,16 +1,22 @@
 import { Model, Schema, model } from "mongoose";
-import {object, ObjectSchema, string} from "joi";
+import { object, ObjectSchema, string } from "joi";
 
-// Define user validation schema
+interface IUser {
+    _id: Schema.Types.ObjectId;
+    name: string;
+    email: string;
+    password: string;
+    role?: string;
+}
 
-const userValidator: ObjectSchema<any> = object({
+const userValidator: ObjectSchema<IUser> = object({
     name: string().required(),
     email: string().email().required(),
     password: string().min(8).required(),
     role: string().valid('admin', 'manager', 'employee').optional()
 });
 
-const userSchema: Schema<any> = new Schema({
+const userSchema: Schema<IUser> = new Schema({
     name: {
         type: String,
         required: true
@@ -29,9 +35,9 @@ const userSchema: Schema<any> = new Schema({
         enum: ['admin', 'manager', 'employee'],
         default: 'employee'
     }
-}, { timestamps: true });
+}, { timestamps: true, versionKey: false });
 
-const userModel:Model<any> = model('User', userSchema);
+const userModel: Model<IUser> = model('User', userSchema);
 
 export { userModel, userValidator };
 export default userModel;
