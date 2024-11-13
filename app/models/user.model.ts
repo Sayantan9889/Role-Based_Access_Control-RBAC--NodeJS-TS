@@ -1,22 +1,29 @@
 import { Model, Schema, model } from "mongoose";
-import { object, ObjectSchema, string } from "joi";
+import { object, ObjectSchema, string, boolean } from "joi";
 
 interface IUser {
-    _id: Schema.Types.ObjectId;
+    image: string;
     name: string;
     email: string;
     password: string;
-    role?: string;
+    role?: 'admin'|'manager'|'employee';
+    isVarified: boolean;
 }
 
 const userValidator: ObjectSchema<IUser> = object({
+    image: string().required(),
     name: string().required(),
     email: string().email().required(),
     password: string().min(8).required(),
-    role: string().valid('admin', 'manager', 'employee').optional()
+    role: string().valid('admin', 'manager', 'employee').optional(),
+    isVarified: boolean().default(false)
 });
 
 const userSchema: Schema<IUser> = new Schema({
+    image: {
+        type: String,
+        required: true
+    },
     name: {
         type: String,
         required: true
@@ -34,6 +41,10 @@ const userSchema: Schema<IUser> = new Schema({
         type: String,
         enum: ['admin', 'manager', 'employee'],
         default: 'employee'
+    },
+    isVarified: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: true, versionKey: false });
 

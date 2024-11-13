@@ -2,18 +2,21 @@ import { Model, Schema, model } from "mongoose";
 import {object, ObjectSchema, string, number, array} from "joi";
 
 interface IProduct {
-    _id: Schema.Types.ObjectId;
-    name: string;
-    price: number;
+    name: string,
+    price: number,
     description: string,
-    images: Array<string>
+    images: Array<string>,
+    product_type: 'New'|'Used',
+    status: 'Active'|'Deactive'
 }
 
 const productValidator:ObjectSchema<IProduct> = object({
     name: string().min(3).max(50).required(),
     price: number().min(0).required(),
     description: string().min(20).max(500).required(),
-    images: array().items(string().required()).min(1)
+    images: array().items(string().required()).min(1),
+    product_type: string().valid(['New', 'Used']),
+    status: string().valid(['Active', 'Deactive'])
 })
 
 const productSchema = new Schema<IProduct>({
@@ -32,17 +35,10 @@ const productSchema = new Schema<IProduct>({
     images: [{
         type: String,
         required: true,
-    }]
+    }],
+    product_type: { type: String, default: 'New', enum: ['New', 'Used'] },
+    status: { type: String, default: 'Active', enum: ['Active', 'Deactive'] },
 });
-
-// productSchema.pre('validate', function(next) {
-//     const { error } = productValidator.validate(this);
-//     if (error) {
-//         this.invalidate('product', error.details[0].message);
-//         return next(error);
-//     }
-//     next();
-// })
 
 const productModel = model<IProduct>("Product", productSchema);
 
