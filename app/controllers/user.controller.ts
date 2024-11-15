@@ -8,7 +8,7 @@ import { IMailOptions, ITokenUser, IVerificationToken } from "../interfaces/auth
 
 
 class userController {
-    async createUser(req: Request, res: Response) {
+    async createUser(req: Request, res: Response):Promise<any> {
         try {
             const body: IUser = req.body;
 
@@ -47,7 +47,7 @@ class userController {
 
             const verificationToken: string = await generateToken({ email: body.email });
 
-            let verification_mail: string = `http://${req.headers.host}/confirmation/${verificationToken}`;
+            let verification_mail: string = `http://${req.headers.host}/account/confirmation/${verificationToken}`;
             const mailOptions: IMailOptions = {
                 from: 'no-reply@sayantan.com',
                 to: body.email,
@@ -80,7 +80,7 @@ class userController {
         }
     }
 
-    async verifyEmail(req: Request, res: Response) {
+    async verifyEmail(req: Request, res: Response):Promise<any> {
         try {
             const verificationToken: string = req.params.token;
 
@@ -111,7 +111,7 @@ class userController {
         }
     }
 
-    async login(req: Request, res: Response) {
+    async loginUser(req: Request, res: Response):Promise<any> {
         try {
             const { email, password } = req.body;
             const user: IUser | null = await userModel.findOne({ email }).select('-isActive -isVarified -updated_at');
@@ -152,7 +152,7 @@ class userController {
         }
     }
 
-    async getUserProfile(req: Request, res: Response) {
+    async getUserProfile(req: Request, res: Response):Promise<any> {
         try {
             const userId:string = req.body.id;
             const user: IUser | null = await userModel.findById(userId).select('-isActive -isVarified -updated_at -password');
@@ -179,7 +179,7 @@ class userController {
         }
     }
 
-    async updateUserProfile(req: Request, res: Response) {
+    async updateUserProfile(req: Request, res: Response):Promise<any> {
         try {
             const userId:string = req.params.id;
             const body = req.body;

@@ -1,16 +1,16 @@
 import { Model, Schema, model } from "mongoose";
-import { object, ObjectSchema, string, boolean } from "joi";
+import joi, { ObjectSchema } from "joi";
 import { IUser } from "../interfaces/user.interface";
 
 
-const userValidator: ObjectSchema<IUser> = object({
-    image: string().required(),
-    name: string().required(),
-    email: string().email().required(),
-    password: string().min(8).required(),
-    role: string().valid('admin', 'manager', 'employee').optional(),
-    isVarified: boolean().default(false),
-    isActive: boolean().default(false)
+const userValidator: ObjectSchema<IUser> = joi.object({
+    image: joi.string().required(),
+    name: joi.string().required(),
+    email: joi.string().email().required(),
+    password: joi.string().min(8).required(),
+    role: joi.string().valid('admin', 'manager', 'employee').optional(),
+    isVarified: joi.boolean().default(false),
+    isActive: joi.boolean().default(false)
 });
 
 const userSchema: Schema<IUser> = new Schema({
