@@ -4,6 +4,7 @@ import { json, urlencoded } from "body-parser";
 import cors from "cors";
 import { config } from "dotenv";
 import { join } from "path";
+import ProductRoute from './app/routes/product.routes';
 
 // Initialize Express app
 const app: Express = express();
@@ -23,6 +24,8 @@ app.use(cors());
 
 // static folder
 app.use('/uploads', express.static(join(__dirname, 'uploads')))
+
+app.use(ProductRoute);
 
 const port = process.env.PORT || 9000;
 app.listen(port, () => {

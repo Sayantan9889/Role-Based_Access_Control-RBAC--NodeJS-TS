@@ -4,3 +4,7 @@ export interface ITokenUser{
     email: string;
     role: string;
 }
+
+export interface IVerificationToken {
+    email: string;
+}

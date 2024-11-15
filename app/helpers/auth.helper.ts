@@ -1,12 +1,12 @@
 import { sign, verify } from "jsonwebtoken";
 import { compare, genSaltSync, hashSync } from "bcryptjs";
 import { createTransport, Transporter } from "nodemailer";
-import { ITokenUser } from "../interfaces/auth-check.interface";
+import { ITokenUser, IVerificationToken } from "../interfaces/auth-check.interface";
 
 
 
 
-const hashPassword = async (password: string): Promise<string> => {
+export const hashPassword = async (password: string): Promise<string> => {
     try {
         const salt = genSaltSync(10);
         return hashSync(password, salt);
@@ -15,7 +15,7 @@ const hashPassword = async (password: string): Promise<string> => {
     }
 }
 
-const comparePassword = async (password: string, hashedPassword: string): Promise<boolean> => {
+export const comparePassword = async (password: string, hashedPassword: string): Promise<boolean> => {
     try {
         return await compare(password, hashedPassword)
     } catch (error: any) {
@@ -24,7 +24,7 @@ const comparePassword = async (password: string, hashedPassword: string): Promis
 }
 
 
-const generateToken = async (user: ITokenUser): Promise<string> => {
+export const generateToken = async (user: ITokenUser | IVerificationToken): Promise<string> => {
     try {
         const token = sign(user, process.env.JWT_SECRET!, { expiresIn: '1d' });
         return token;
@@ -33,7 +33,7 @@ const generateToken = async (user: ITokenUser): Promise<string> => {
     }
 }
 
-const verifyToken = async (token: string): Promise<ITokenUser> => {
+export const verifyToken = async (token: string): Promise<ITokenUser | IVerificationToken> => {
     try {
         const user: ITokenUser = verify(token, process.env.JWT_SECRET!) as ITokenUser;
         return user;
@@ -42,7 +42,7 @@ const verifyToken = async (token: string): Promise<ITokenUser> => {
     }
 }
 
-const mailTransporter = async ():Promise<Transporter<any>> => {
+export const mailTransporter = async ():Promise<Transporter<any>> => {
     try {
         return createTransport({
             host: "smtp.gmail.com",
@@ -58,24 +58,11 @@ const mailTransporter = async ():Promise<Transporter<any>> => {
     }
 }
 
-const sendVerificationEmail = async (mailOptions:any): Promise<void> => {
+export const sendVerificationEmail = async (mailOptions:any): Promise<void> => {
     try {
         const transporter = await mailTransporter();
-        // let verification_mail = `http://${req.headers.host}/confirmation/${user.email}/${token.token}`;
-        // const mailOptions = {
-        //     from: 'no-reply@sayantan.com',
-        //     to: user.email,
-        //     subject: 'Account Verification',
-        //     html: `
-        //         <h1>Hello, ${body.name}</h1>
-        //         <p>Please verify your account by clicking the link below:</p>
-        //         <a href="${verification_mail}" style="color: blue;">${verification_mail}</a>
-        //         <p>Thank you!</p>
-        //     `
-        // };
-        await transporter.sendMail(mailOptions);
-        console.log("Verification email sent successfully!");
-        
+        const info = await transporter.sendMail(mailOptions);
+        console.log("Verification email sent successfully!", info);
     } catch (error: any) {
         throw new Error(error.message || 'Failed to send verification email!');
     }

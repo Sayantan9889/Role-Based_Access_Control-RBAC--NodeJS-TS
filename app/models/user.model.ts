@@ -8,6 +8,7 @@ interface IUser {
     password: string;
     role?: 'admin'|'manager'|'employee';
     isVarified: boolean;
+    isActive: boolean;
 }
 
 const userValidator: ObjectSchema<IUser> = object({
@@ -16,7 +17,8 @@ const userValidator: ObjectSchema<IUser> = object({
     email: string().email().required(),
     password: string().min(8).required(),
     role: string().valid('admin', 'manager', 'employee').optional(),
-    isVarified: boolean().default(false)
+    isVarified: boolean().default(false),
+    isActive: boolean().default(false)
 });
 
 const userSchema: Schema<IUser> = new Schema({
@@ -30,8 +32,7 @@ const userSchema: Schema<IUser> = new Schema({
     },
     email: {
         type: String,
-        required: true,
-        unique: true
+        required: true
     },
     password: {
         type: String,
@@ -43,6 +44,10 @@ const userSchema: Schema<IUser> = new Schema({
         default: 'employee'
     },
     isVarified: {
+        type: Boolean,
+        default: false
+    },
+    isActive: {
         type: Boolean,
         default: false
     }

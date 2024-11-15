@@ -10,14 +10,14 @@ interface IProduct {
     status: 'Active'|'Deactive'
 }
 
-const productValidator:ObjectSchema<IProduct> = object({
-    name: string().min(3).max(50).required(),
-    price: number().min(0).required(),
-    description: string().min(20).max(500).required(),
-    images: array().items(string().required()).min(1),
-    product_type: string().valid(['New', 'Used']),
-    status: string().valid(['Active', 'Deactive'])
-})
+// const productValidator:ObjectSchema<IProduct> = object({
+//     name: string().min(3).max(50).required(),
+//     price: number().min(0).required(),
+//     description: string().min(20).max(500).required(),
+//     images: array().items(string().required()).min(1),
+//     product_type: string().valid(['New', 'Used']),
+//     status: string().valid(['Active', 'Deactive'])
+// })
 
 const productSchema = new Schema<IProduct>({
     name: {
@@ -42,5 +42,5 @@ const productSchema = new Schema<IProduct>({
 
 const productModel = model<IProduct>("Product", productSchema);
 
-export {productModel, productValidator};
+export {productModel};
 export default productModel;
