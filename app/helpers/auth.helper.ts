@@ -1,7 +1,7 @@
 import { sign, verify } from "jsonwebtoken";
 import { compare, genSaltSync, hashSync } from "bcryptjs";
 import { createTransport, Transporter } from "nodemailer";
-import { ITokenUser, IVerificationToken } from "../interfaces/auth-check.interface";
+import { IMailOptions, ITokenUser, IVerificationToken } from "../interfaces/auth-check.interface";
 
 
 
@@ -58,7 +58,7 @@ export const mailTransporter = async ():Promise<Transporter<any>> => {
     }
 }
 
-export const sendVerificationEmail = async (mailOptions:any): Promise<void> => {
+export const sendVerificationEmail = async (mailOptions:IMailOptions): Promise<void> => {
     try {
         const transporter = await mailTransporter();
         const info = await transporter.sendMail(mailOptions);

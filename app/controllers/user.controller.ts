@@ -1,16 +1,18 @@
-import path from "path";
 import { comparePassword, generateToken, hashPassword, sendVerificationEmail, verifyToken } from "../helpers/auth.helper";
 import { userModel, userValidator } from "../models/user.model";
+import { IUser } from "../interfaces/user.interface";
 import { Request, Response } from "express";
 import { unlink } from "fs";
+import path from "path";
+import { IMailOptions, ITokenUser, IVerificationToken } from "../interfaces/auth-check.interface";
 
 
 class userController {
     async createUser(req: Request, res: Response) {
         try {
-            const body = req.body;
+            const body: IUser = req.body;
 
-            const existUser = await userModel.findOne({ email: body.email })
+            const existUser: IUser | null = await userModel.findOne({ email: body.email })
             if (existUser) {
                 return res.status(400).json({
                     message: "Email already exists!",
@@ -23,11 +25,11 @@ class userController {
                 });
             }
 
-            const hashedPassword = await hashPassword(body.password);
+            const hashedPassword: string = await hashPassword(body.password);
             body.password = hashedPassword;
             delete body.confirmPassword;
 
-            const file = req.file;
+            const file: Express.Multer.File | undefined = req.file;
             const basePath: string = `${req.protocol}://${req.get('host')}/`;
             let imagePath: string = `${basePath}/assets/no-image.png`;
             if (file) {
@@ -43,10 +45,10 @@ class userController {
                 });
             }
 
-            const verificationToken = await generateToken({ email: body.email });
+            const verificationToken: string = await generateToken({ email: body.email });
 
-            let verification_mail = `http://${req.headers.host}/confirmation/${verificationToken}`;
-            const mailOptions = {
+            let verification_mail: string = `http://${req.headers.host}/confirmation/${verificationToken}`;
+            const mailOptions: IMailOptions = {
                 from: 'no-reply@sayantan.com',
                 to: body.email,
                 subject: 'Account Verification',
@@ -60,10 +62,9 @@ class userController {
 
             await sendVerificationEmail(mailOptions);
 
-            console.log("body: ", body);
             const data = new userModel(body);
-            const newUser = await data.save();
-            console.log("newUser: ", newUser);
+            const newUser: IUser = await data.save();
+
             return res.status(200).json({
                 status: 200,
                 message: `${newUser.name} thank you for Registering! A verification email will be sent to your mail. Please verify and login.`,
@@ -81,11 +82,11 @@ class userController {
 
     async verifyEmail(req: Request, res: Response) {
         try {
-            const verificationToken = req.params.token;
+            const verificationToken: string = req.params.token;
 
-            const userId = await verifyToken(verificationToken)
+            const email: IVerificationToken = await verifyToken(verificationToken)
 
-            const user = await userModel.findOne({ verificationToken });
+            const user: IUser | null = await userModel.findOne({ email });
 
             if (!user) {
                 return res.status(400).json({
@@ -94,14 +95,14 @@ class userController {
                 });
             }
 
-            await userModel.findByIdAndUpdate(userId, { isVarified: true, isActive: true });
+            await userModel.findByIdAndUpdate(user._id, { isVarified: true, isActive: true });
 
             return res.status(200).json({
                 status: 200,
                 message: "Your account has been verified successfully! You can now login.",
             });
         } catch (error: any) {
-            console.log("error: ", error);
+            console.error("error: ", error);
             return res.status(500).json({
                 status: 500,
                 message: error.message || "Something went wrong verifing your account! Please try again.",
@@ -113,7 +114,7 @@ class userController {
     async login(req: Request, res: Response) {
         try {
             const { email, password } = req.body;
-            const user: any = await userModel.findOne({ email }).select('-isActive -isVarified -updated_at');
+            const user: IUser | null = await userModel.findOne({ email }).select('-isActive -isVarified -updated_at');
 
             if (!user) {
                 return res.status(400).json({
@@ -122,7 +123,7 @@ class userController {
                 });
             }
 
-            const isPasswordMatch = await comparePassword(password, user.password);
+            const isPasswordMatch:boolean = await comparePassword(password, user.password);
 
             if (!isPasswordMatch) {
                 return res.status(400).json({
@@ -131,9 +132,9 @@ class userController {
                 });
             }
 
-            const token = await generateToken({ id: user._id, name: user.name, email: user.email, role: user.role });
+            const token:string = await generateToken({ id: user._id, name: user.name, email: user.email, role: user.role });
 
-            const _user = { ...user._doc, token }
+            const _user = { ...(user as any)._doc, token }
             delete _user.password;
 
             return res.status(200).json({
@@ -153,8 +154,8 @@ class userController {
 
     async getUserProfile(req: Request, res: Response) {
         try {
-            const userId = req.body.id;
-            const user = await userModel.findById(userId).select('-isActive -isVarified -updated_at -password');
+            const userId:string = req.body.id;
+            const user: IUser | null = await userModel.findById(userId).select('-isActive -isVarified -updated_at -password');
 
             if (!user) {
                 return res.status(404).json({
@@ -180,7 +181,7 @@ class userController {
 
     async updateUserProfile(req: Request, res: Response) {
         try {
-            const userId = req.params.id;
+            const userId:string = req.params.id;
             const body = req.body;
             body.password && delete body.password;
 

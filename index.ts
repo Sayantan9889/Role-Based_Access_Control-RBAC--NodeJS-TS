@@ -25,7 +25,7 @@ app.use(cors());
 // static folder
 app.use('/uploads', express.static(join(__dirname, 'uploads')))
 
-app.use(ProductRoute);
+app.use('/api',ProductRoute);
 
 const port = process.env.PORT || 9000;
 app.listen(port, () => {

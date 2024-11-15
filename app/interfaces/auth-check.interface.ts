@@ -1,4 +1,4 @@
-export interface ITokenUser{
+export interface ITokenUser {
     id: string;
     name: string;
     email: string;
@@ -7,4 +7,11 @@ export interface ITokenUser{
 
 export interface IVerificationToken {
     email: string;
+}
+
+export interface IMailOptions {
+    from: string;
+    to: string;
+    subject: string;
+    html: string;
 }

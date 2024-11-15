@@ -1,15 +1,7 @@
 import { Model, Schema, model } from "mongoose";
 import { object, ObjectSchema, string, boolean } from "joi";
+import { IUser } from "../interfaces/user.interface";
 
-interface IUser {
-    image: string;
-    name: string;
-    email: string;
-    password: string;
-    role?: 'admin'|'manager'|'employee';
-    isVarified: boolean;
-    isActive: boolean;
-}
 
 const userValidator: ObjectSchema<IUser> = object({
     image: string().required(),

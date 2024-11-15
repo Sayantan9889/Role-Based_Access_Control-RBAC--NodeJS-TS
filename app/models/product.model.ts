@@ -1,32 +1,27 @@
 import { Model, Schema, model } from "mongoose";
-import {object, ObjectSchema, string, number, array} from "joi";
+import joi, { ObjectSchema } from "joi";
+import { IProduct } from "../interfaces/product.interface";
 
-interface IProduct {
-    name: string,
-    price: number,
-    description: string,
-    images: Array<string>,
-    product_type: 'New'|'Used',
-    status: 'Active'|'Deactive'
-}
 
-// const productValidator:ObjectSchema<IProduct> = object({
-//     name: string().min(3).max(50).required(),
-//     price: number().min(0).required(),
-//     description: string().min(20).max(500).required(),
-//     images: array().items(string().required()).min(1),
-//     product_type: string().valid(['New', 'Used']),
-//     status: string().valid(['Active', 'Deactive'])
-// })
+const productValidator: ObjectSchema<IProduct> = joi.object({
+    name: joi.string().min(3).max(50).required(),
+    price: joi.number().min(0).required(),
+    description: joi.string().min(20).max(500).required(),
+    images: joi.array().items(joi.string().required()).min(1),
+    product_type: joi.string().valid('New', 'Used'),
+    status: joi.string().valid('Active', 'Deactive')
+})
 
-const productSchema = new Schema<IProduct>({
+const productSchema:Schema<IProduct> = new Schema<IProduct>({
     name: {
         type: String,
         required: true,
+        index: true,
     },
     price: {
         type: Number,
         required: true,
+        index: true,
     },
     description: {
         type: String,
@@ -38,9 +33,9 @@ const productSchema = new Schema<IProduct>({
     }],
     product_type: { type: String, default: 'New', enum: ['New', 'Used'] },
     status: { type: String, default: 'Active', enum: ['Active', 'Deactive'] },
-});
+}, {timestamps:true, versionKey:false});
 
-const productModel = model<IProduct>("Product", productSchema);
+const productModel:Model<IProduct> = model<IProduct>("Product", productSchema);
 
-export {productModel};
+export { productModel, productValidator };
 export default productModel;
