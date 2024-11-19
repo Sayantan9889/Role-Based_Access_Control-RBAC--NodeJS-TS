@@ -185,7 +185,7 @@ class userController {
             const body = req.body;
             body.password && delete body.password;
 
-            const existingUser = await userModel.findById(userId).select('-isActive -isVarified -updated_at -password');
+            const existingUser = await userModel.findById(userId);
 
             if (!existingUser) {
                 return res.status(404).json({
