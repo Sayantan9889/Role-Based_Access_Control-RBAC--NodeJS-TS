@@ -40,7 +40,7 @@ class userController {
             const { error } = userValidator.validate(body);
             if (error) {
                 return res.status(400).json({
-                    message: error.details[0].message || "Validation failed",
+                    message: error.details[0].message || "Validation failed!",
                     error
                 });
             }
