@@ -49,7 +49,7 @@ class ProductController {
 
     async getAllProducts(req: Request, res: Response): Promise<any> {
         try {
-            const products:Array<IProduct> = await productModel.find().select(' -status');
+            const products:Array<IProduct> = await productModel.find();
             res.status(200).json({
                 status: 200,
                 message: "Products fetched successfully!",
@@ -68,7 +68,7 @@ class ProductController {
     async getProductById(req: Request, res: Response): Promise<any> {
         try {
             const productId:string = req.params.id;
-            const product = await productModel.findById(productId).select(' -status');
+            const product = await productModel.findById(productId);
             if (!product) {
                 return res.status(404).json({
                     status: 404,
@@ -138,7 +138,7 @@ class ProductController {
             }
 
             // console.log("body: ", body);
-            const updatedProduct = await productModel.findByIdAndUpdate(productId, body, { new: true }).select(' --status');
+            const updatedProduct = await productModel.findByIdAndUpdate(productId, body, { new: true });
             res.status(200).json({
                 status: 200,
                 message: "Product updated successfully!",
