@@ -5,7 +5,7 @@ const route = Router();
 
 route.post('/register/user', upload.any(), userController.createUser);
 route.get('/account/confirmation/:token', userController.verifyEmail);
-route.get('/login/user', userController.loginUser);
+route.post('/login/user', userController.loginUser);
 route.get('/fetch/user/:id', userController.getUserProfile);
 route.put('/update/user/:id', upload.any(), userController.updateUserProfile);
 

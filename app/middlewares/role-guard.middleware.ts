@@ -25,7 +25,7 @@ import { ITokenUser } from "../interfaces/auth-check.interface";
 // }
 
 export const isManager = async (req: Request, res: Response, next: NextFunction):Promise<any> => {
-    const token = req.headers.token;
+    const token = req.headers['auth-token'];
 
     if (!token) {
         return res.status(401).json({
@@ -36,7 +36,7 @@ export const isManager = async (req: Request, res: Response, next: NextFunction)
 
     const user:ITokenUser = await verifyToken(Array.isArray(token) ? token[0] : token) as ITokenUser;
 
-    if (!user || user.role !== "manager") {
+    if (!user || user.role == "manager") {
         return res.status(403).json({
             status: 403,
             message: "Unauthorized access! Only admin can perform this action.",
@@ -48,7 +48,7 @@ export const isManager = async (req: Request, res: Response, next: NextFunction)
 
 
 export const isEmployee = async (req: Request, res: Response, next: NextFunction):Promise<any> => {
-    const token = req.headers.token;
+    const token = req.headers['auth-token'];
 
     if (!token) {
         return res.status(401).json({
@@ -59,7 +59,7 @@ export const isEmployee = async (req: Request, res: Response, next: NextFunction
 
     const user:ITokenUser = await verifyToken(Array.isArray(token) ? token[0] : token) as ITokenUser;
 
-    if (!user || user.role !== "employee") {
+    if (!user || user.role == "employee") {
         return res.status(403).json({
             status: 403,
             message: "Unauthorized access! An Employee cannot perform this action.",

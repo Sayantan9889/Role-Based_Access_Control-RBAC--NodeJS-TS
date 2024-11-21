@@ -40,6 +40,7 @@ class userController {
             const { error } = userValidator.validate(body);
             if (error) {
                 return res.status(400).json({
+                    status: 400,
                     message: error.details[0].message || "Validation failed!",
                     error
                 });
@@ -47,7 +48,7 @@ class userController {
 
             const verificationToken: string = await generateToken({ email: body.email });
 
-            let verification_mail: string = `http://${req.headers.host}/account/confirmation/${verificationToken}`;
+            let verification_mail: string = `http://${req.headers.host}/api/account/confirmation/${verificationToken}`;
             const mailOptions: IMailOptions = {
                 from: 'no-reply@sayantan.com',
                 to: body.email,
@@ -84,9 +85,9 @@ class userController {
         try {
             const verificationToken: string = req.params.token;
 
-            const email: IVerificationToken = await verifyToken(verificationToken)
+            const tokenData: IVerificationToken = await verifyToken(verificationToken)
 
-            const user: IUser | null = await userModel.findOne({ email });
+            const user: IUser | null = await userModel.findOne({ email:tokenData.email });
 
             if (!user) {
                 return res.status(400).json({

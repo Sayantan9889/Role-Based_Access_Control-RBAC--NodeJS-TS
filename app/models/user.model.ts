@@ -8,7 +8,7 @@ const userValidator: ObjectSchema<IUser> = joi.object({
     name: joi.string().required(),
     email: joi.string().email().required(),
     password: joi.string().min(8).required(),
-    role: joi.string().valid('admin', 'manager', 'employee').optional(),
+    role: joi.string(), //.valid('admin', 'manager', 'employee').optional(),
     isVarified: joi.boolean().default(false),
     isActive: joi.boolean().default(false)
 });
