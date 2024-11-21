@@ -8,6 +8,6 @@ route.post('/create/product', upload.any(), productController.createProduct);
 route.get('/get/products', productController.getAllProducts);
 route.get('/get/products/:id', productController.getProductById)
 route.put('/update/product/:id', isEmployee, upload.any(), productController.updateProduct);
-route.get('/delete/product/:id', isEmployee, isManager, productController.softyDeleteProduct);
+route.delete('/delete/product/:id', isEmployee, isManager, productController.softyDeleteProduct);
 
 export default route;

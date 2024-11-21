@@ -41,7 +41,7 @@ class ProductController {
             console.error("error: ", error);
             res.status(500).json({
                 status: 500,
-                message: error.message || "Invalid product data!",
+                message: "Invalid product data!",
                 error,
             });
         }
@@ -49,7 +49,7 @@ class ProductController {
 
     async getAllProducts(req: Request, res: Response): Promise<any> {
         try {
-            const products:Array<IProduct> = await productModel.find();
+            const products:Array<IProduct> = await productModel.find({status: "Active"});
             res.status(200).json({
                 status: 200,
                 message: "Products fetched successfully!",
@@ -59,7 +59,7 @@ class ProductController {
             console.error("error: ", error);
             res.status(500).json({
                 status: 500,
-                message: error.message || "Failed to fetch products!",
+                message: "Failed to fetch products!",
                 error
             });
         }
@@ -68,7 +68,7 @@ class ProductController {
     async getProductById(req: Request, res: Response): Promise<any> {
         try {
             const productId:string = req.params.id;
-            const product = await productModel.findById(productId);
+            const product = await productModel.findOne({_id: productId, status: "Active"});
             if (!product) {
                 return res.status(404).json({
                     status: 404,
@@ -85,7 +85,7 @@ class ProductController {
             console.error("error: ", error);
             res.status(500).json({
                 status: 500,
-                message: error.message || "Failed to fetch product!",
+                message: "Failed to fetch product!",
                 error,
             });
         }
@@ -148,7 +148,7 @@ class ProductController {
             console.error("error: ", error);
             res.status(500).json({
                 status: 500,
-                message: error.message || "Failed to update product!",
+                message: "Failed to update product!",
                 error,
             });
 
@@ -176,7 +176,7 @@ class ProductController {
             console.error("err: ", err);
             res.status(500).json({
                 status: 500,
-                message: err.message || "Failed to delete product!",
+                message: "Failed to delete product!",
                 error:err,
             });
         }
