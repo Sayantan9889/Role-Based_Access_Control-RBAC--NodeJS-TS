@@ -198,13 +198,15 @@ class ProductController {
                 existingProduct.images = existingProduct.images.filter((image: string) => image !== imagePathToDelete);
                 await productModel.findByIdAndUpdate(productId, { images: existingProduct.images });
                 const imageName: string = imagePathToDelete.split('/').pop()!;
-                unlink( path.join(__dirname, '..', '..', 'uploads', imageName), (err) => {
-                    if (err) {
-                        console.error(`Error deleting image: ${imagePathToDelete}`, err);
-                    } else {
-                        console.log(`Deleted image: ${imagePathToDelete}`);
-                    }
-                });
+                if (imageName !== 'no-image.png') {
+                    unlink(path.join(__dirname, '..', '..', 'uploads', imageName), (err) => {
+                        if (err) {
+                            console.error(`Error deleting image: ${imagePathToDelete}`, err);
+                        } else {
+                            console.log(`Deleted image: ${imagePathToDelete}`);
+                        }
+                    });
+                }
             } else {
                 return res.status(400).json({
                     status: 400,
