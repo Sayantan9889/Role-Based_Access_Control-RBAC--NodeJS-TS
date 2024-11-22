@@ -198,8 +198,11 @@ class userController {
             const userId: string = req.params.id;
             const body = req.body;
             body.password && delete body.password;
+            body.role && delete body.role;
+            body.isVarified && delete body.isVarified;
+            body.isActive && delete body.isActive;
 
-            const existingUser = await userModel.findById(userId);
+            const existingUser = await userModel.findById(userId).select('-isActive -isVarified');
 
             if (!existingUser) {
                 return res.status(404).json({
@@ -208,7 +211,7 @@ class userController {
                 });
             }
 
-            const file = req.file;
+            const file =  (req.files as any)[0];
             if (file) {
                 const basePath: string = `${req.protocol}://${req.get('host')}`;
                 const imagePath: string = `${basePath}/uploads/${file.filename}`;
@@ -230,7 +233,7 @@ class userController {
             return res.status(200).json({
                 status: 200,
                 message: "Profile updated successfully!",
-                user,
+                data: user,
             });
         } catch (error: any) {
             console.log("error: ", error);
