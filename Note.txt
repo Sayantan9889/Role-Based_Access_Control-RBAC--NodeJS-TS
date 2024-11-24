@@ -1,0 +1,13 @@
+Assessment (10/11/2024): 
+--------------------------
+Building Role-Based Access Control (RBAC) in Node.Js and Express.Js
+Here, we have defined three roles: “admin,” “manager,” and “employee,” each with different sets of permissions related to task management.
+where admin can create read update delete product and manager can create read and update product and employee only create and read product
+This is an Assignment from office
+
+
+Backend(NodeJS): https://github.com/Sayantan9889/Role-Based_Access_Control-RBAC--NodeJS-TS.git
+Admin Panel(Angular): https://github.com/Sayantan9889/Role-Based_Access_Control-RBAC--Angular18.git
+
+
+cred: sayantan@yopmail.com(Admin), nezuko@yopmail.com(Manager), shinchan@yopmail.com(Employee)
